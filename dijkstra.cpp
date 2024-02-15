@@ -186,6 +186,7 @@ int main(){
     graph g;
     g.add_vertex("Riga");
     g.add_vertex("Olaine");
+    g.add_vertex("Kekava");
     g.add_vertex("Jurmala");
     g.add_vertex("Tukums");
     g.add_vertex("Jelgava");
@@ -193,6 +194,7 @@ int main(){
 
     g.add_edge("Riga", "Jurmala", 10);
     g.add_edge("Riga", "Olaine", 11);
+    g.add_edge("Riga", "Kekava", 13);
     g.add_edge("Riga", "Jelgava", 80);
     
     g.add_edge("Jurmala", "Jelgava", 30);
@@ -202,6 +204,7 @@ int main(){
     g.add_edge("Tukums", "Ventspils", 10);
 
     g.add_edge("Olaine", "Ventspils", 10);
+    g.add_edge("Kekava", "Ventspils", 3);
 
     // g.print();
 
