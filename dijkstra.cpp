@@ -3,6 +3,7 @@
 #include <map>
 #include <string> 
 #include "graph.hpp"
+#include "file_reader.cpp"
 
 using namespace std;
 
@@ -67,35 +68,40 @@ void dijkstra(vertex* from, vertex* to){
 }
 
 int main(){
-    graph g;
-    g.add_vertex("Riga");
-    g.add_vertex("Olaine");
-    g.add_vertex("Kekava");
-    g.add_vertex("Jurmala");
-    g.add_vertex("Tukums");
-    g.add_vertex("Jelgava");
-    g.add_vertex("Ventspils");
+    {
+        graph g;
+        load_vertices("graph_templates/latvia/vertices.dat", g);
+        load_edges("graph_templates/latvia/edges.dat", g);
 
-    g.add_edge("Riga", "Jurmala", 10);
-    g.add_edge("Riga", "Olaine", 11);
-    g.add_edge("Riga", "Kekava", 13);
-    g.add_edge("Riga", "Jelgava", 80);
+        vertex* from = g.vertices["Riga"];
+        vertex* to = g.vertices["Ventspils"];
+        
+        dijkstra(from, to);
+
+    }
+    // g.add_vertex("Riga");
+    // g.add_vertex("Olaine");
+    // g.add_vertex("Kekava");
+    // g.add_vertex("Jurmala");
+    // g.add_vertex("Tukums");
+    // g.add_vertex("Jelgava");
+    // g.add_vertex("Ventspils");
+
+    // g.add_edge("Riga", "Jurmala", 10);
+    // g.add_edge("Riga", "Olaine", 11);
+    // g.add_edge("Riga", "Kekava", 13);
+    // g.add_edge("Riga", "Jelgava", 80);
     
-    g.add_edge("Jurmala", "Jelgava", 30);
-    g.add_edge("Jurmala", "Tukums", 20);
+    // g.add_edge("Jurmala", "Jelgava", 30);
+    // g.add_edge("Jurmala", "Tukums", 20);
 
-    g.add_edge("Jelgava", "Ventspils", 50);
-    g.add_edge("Tukums", "Ventspils", 10);
+    // g.add_edge("Jelgava", "Ventspils", 50);
+    // g.add_edge("Tukums", "Ventspils", 10);
 
-    g.add_edge("Olaine", "Ventspils", 10);
-    g.add_edge("Kekava", "Ventspils", 10);
+    // g.add_edge("Olaine", "Ventspils", 10);
+    // g.add_edge("Kekava", "Ventspils", 10);
 
     // g.print();
-
-    vertex* from = g.vertices["Riga"];
-    vertex* to = g.vertices["Ventspils"];
-    
-    dijkstra(from, to);
 
     return 0;
 }
