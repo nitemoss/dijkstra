@@ -17,15 +17,15 @@ void load_vertices(const string& filename, graph &g) {
     else cerr << "Unable to open file: " << filename << endl;
 }
 
-void load_edges(const string& filename, graph &g) {
+void load_edges(const string& filename, graph &g, bool bidirectional = false) {
     vector<string> edges = {};
     ifstream file(filename);
     if (file.is_open()) {
         string from, to;
         int distance;
         while( file >> from >> to >> distance){
-            cout << from << " " << to << " " << distance  << endl;
-            g.add_edge(from, to, distance);
+            cout << "Adding " << (bidirectional ? "bidirectional " : "") << "edge " << from << " - " << to << " - " << distance << endl;
+            g.add_edge(from, to, distance, bidirectional);
         }
         file.close();
     } 

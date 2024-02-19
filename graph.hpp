@@ -15,6 +15,7 @@ struct vertex {
     typedef pair<int, vertex*> edge; 
     
     // Dijkstra attributes
+    bool visited = false;
     int shortest_path = INF;
     vertex* previous = NULL;
     
@@ -40,13 +41,14 @@ void vertex::print_edges(){
 
 struct vertex_queue {
 private:
-    std::vector<vertex*> vertices{};
+    vector<vertex*> vertices{};
 
 public:
     void add(vertex* v){
         vertices.push_back(v);
     }
     vertex* get_closest(){
+        // Will return vertex in queue with minimum shortest path
         vertex* minElement = NULL;
         for(vertex* v : vertices) {    
             if(minElement == NULL or minElement->shortest_path > v->shortest_path){
@@ -62,6 +64,13 @@ public:
             vertices.erase(it);
         }
     }
+    void print(){
+        cout << "Queue: ";
+        for(auto &it: vertices){
+            cout << " " << it->name;
+        }
+        cout << endl;
+    }
     bool empty(){
         return vertices.empty();
     }
@@ -76,7 +85,7 @@ public:
     vertex_map vertices;
 
     void add_vertex(const string&);
-    void add_edge(const string& from, const string& to, double cost);
+    void add_edge(const string& from, const string& to, double cost, bool bidirectional);
     
     void dijkstra(vertex* from, vertex* to);
 
@@ -93,14 +102,14 @@ void graph::add_vertex(const string &name){
         vertices[name] = v;
         return;
     }
-    cout << "Vertex already exists!" << endl;
+    cout << "Vertex " << name << " already exists!" << endl;
 }
 
-void graph::add_edge(const string& from, const string& to, double cost)
-{
+void graph::add_edge(const string& from, const string& to, double cost, bool bidirectional = false){
     vertex *f = (vertices.find(from)->second);
     vertex *t = (vertices.find(to)->second);
     pair<int, vertex *> edge = make_pair(cost, t);
+    if(bidirectional) add_edge(to, from, cost);
     f->edges.push_back(edge);
 }
 

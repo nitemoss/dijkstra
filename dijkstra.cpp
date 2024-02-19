@@ -15,91 +15,109 @@ void dijkstra(vertex* from, vertex* to){
     queue.add(current);
 
     while(!queue.empty()){
-        current = queue.get_closest();        
+        current = queue.get_closest();     
+        current->visited = true;   
         queue.erase_closest();
 
         // Vertex with a minimum distance of edge from a current vertex, which will be used as a current vertex in next iteration
         vertex* closest_neighbor = NULL;
 
+        if(current == to) break;
         if(current == from){
-            cout << "Start vertex found, set as visited, distance = 0." << endl;
+            cout << "Start vertex found, distance = 0." << endl;
             current->shortest_path = 0;
-        }    
-        if(current == to) break;    
+        }
+        if(current == NULL) {
+            cout << "Error, got NULL current vertex" << endl;
+            break;
+        }
 
         int edges_amount = current->edges.size();
-        cout << endl << endl << "Analyzing " << edges_amount << " edges of " << current->name << endl;
 
         if(edges_amount == 0) {
-            cout << "No edges for " << current->name;
+            cout << "No edges for " << current->name << endl;
             continue;
         }
-        // Analyze neigbours
+        cout << endl << "Analyzing " << edges_amount << " edges of " << current->name << endl;
+        // Analyze neigbours of 'current'
+        closest_neighbor = NULL;
+        int edge_distance = INF;
         for (auto edges_iterator: current->edges){
-            int edge_distance = edges_iterator.first;
+            edge_distance = edges_iterator.first;
             vertex* edge_destination = edges_iterator.second;
             
-            cout << "\t" << current->name << " -> " << edge_destination->name << " : " << edge_distance << " " << endl;
+            cout << "\t"  << current->name  << " -> " << edge_destination->name  << " : "  << edge_distance  << " "  << (edge_destination->visited ? " (visited)" : "")  << endl;
             
-            // Update vertex distance if shorter path was found, store the closest vertex to use it in the next iteration.
-            if(closest_neighbor == NULL or current->shortest_path + edge_distance < edge_destination->shortest_path){
-                closest_neighbor = edge_destination;
-                closest_neighbor->shortest_path = current->shortest_path + edge_distance;
-                closest_neighbor->previous = current;
+            // 1. Update estimates
+            if((current->shortest_path + edge_distance < edge_destination->shortest_path)){
                 
-                cout << "\t\tUpdating distance of " << closest_neighbor->name << " to " << closest_neighbor->shortest_path << "; " << endl;
+                edge_destination->shortest_path = current->shortest_path + edge_distance;
+                edge_destination->previous = current;
+
+                cout << "\t\tUpdating shortest path of " << edge_destination->name << " to " << edge_destination->shortest_path << "; " << endl;
+            } 
+            // 2. Choose next 'current'
+            if(!(edge_destination->visited) and (closest_neighbor == NULL or edge_destination->shortest_path < closest_neighbor->shortest_path)){
+                cout << "New closest neighbor: " << edge_destination->name << " " << edge_destination->shortest_path << endl;
+                edge_destination->visited = true;
+                closest_neighbor = edge_destination;
+                
                 queue.add(closest_neighbor);
+                queue.print();
             }
         }
-        current = closest_neighbor;
+        if(closest_neighbor == NULL){
+            cout << "No unvisited vertices for " << current->name << endl;
+            break;
+        }
+        cout << "Closest neighbor, visited: " << closest_neighbor->name << endl;
     }
+
     list<string> path = {};
     vertex* path_reversed_it = to;
+    
+    if(to->shortest_path == INF){ cout << "Error. No path found. " << endl; return; }
 
     while(path_reversed_it != NULL){
         path.push_front(path_reversed_it->name);
         path_reversed_it = path_reversed_it->previous;
     }
-    cout << endl;
+
+    cout << endl << endl << "Final route: " << endl;
     for(auto &it: path){
         cout << " -> " << it;
     }
+    cout << " (" << to->shortest_path << " km)";
     cout << endl;
 }
 
 int main(){
+    // {
+    //     graph g;
+    //     string template_name = "europe_north";
+    //     load_vertices("graph_templates/" + template_name + "/vertices.dat", g);
+    //     load_edges("graph_templates/" + template_name + "/edges.dat", g, true);
+
+    //     vertex* from = g.vertices["Vilnius"];
+    //     vertex* to = g.vertices["Helsinki"];
+        
+    //     // Dijkstra algorithm can be performed only once on the same graph.
+    //     dijkstra(from, to);
+    //     // dijkstra(to, from);
+    // }
     {
         graph g;
-        load_vertices("graph_templates/latvia/vertices.dat", g);
-        load_edges("graph_templates/latvia/edges.dat", g);
+        string template_name = "europe";
+        load_vertices("graph_templates/" + template_name + "/vertices.dat", g);
+        load_edges("graph_templates/" + template_name + "/edges.dat", g, true);
 
-        vertex* from = g.vertices["Riga"];
-        vertex* to = g.vertices["Ventspils"];
+        vertex* from = g.vertices["Lisbon"];
+        vertex* to = g.vertices["Berlin"];
         
+        // Dijkstra algorithm can be performed only once on the same graph.
         dijkstra(from, to);
-
+        // dijkstra(to, from);
     }
-    // g.add_vertex("Riga");
-    // g.add_vertex("Olaine");
-    // g.add_vertex("Kekava");
-    // g.add_vertex("Jurmala");
-    // g.add_vertex("Tukums");
-    // g.add_vertex("Jelgava");
-    // g.add_vertex("Ventspils");
-
-    // g.add_edge("Riga", "Jurmala", 10);
-    // g.add_edge("Riga", "Olaine", 11);
-    // g.add_edge("Riga", "Kekava", 13);
-    // g.add_edge("Riga", "Jelgava", 80);
-    
-    // g.add_edge("Jurmala", "Jelgava", 30);
-    // g.add_edge("Jurmala", "Tukums", 20);
-
-    // g.add_edge("Jelgava", "Ventspils", 50);
-    // g.add_edge("Tukums", "Ventspils", 10);
-
-    // g.add_edge("Olaine", "Ventspils", 10);
-    // g.add_edge("Kekava", "Ventspils", 10);
 
     // g.print();
 
