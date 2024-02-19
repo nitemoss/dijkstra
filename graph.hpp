@@ -90,6 +90,7 @@ public:
     void dijkstra(vertex* from, vertex* to);
 
     void print();
+    void reset();
 };
 
 void graph::add_vertex(const string &name){
@@ -121,4 +122,13 @@ void graph::print(){
         it->second->print_edges();
         cout << endl;
     }
+}
+
+void graph::reset(){
+    for (vertex_map::iterator it = vertices.begin(); it != vertices.end(); it++){
+        it->second->shortest_path = INF;
+        it->second->visited = false;
+        it->second->previous = NULL;
+    }
+    cout << "Graph has been reset." << endl;
 }

@@ -24,7 +24,7 @@ void load_edges(const string& filename, graph &g, bool bidirectional = false) {
         string from, to;
         int distance;
         while( file >> from >> to >> distance){
-            cout << "Adding " << (bidirectional ? "bidirectional " : "") << "edge " << from << " - " << to << " - " << distance << endl;
+            // cout << "Adding " << (bidirectional ? "bidirectional " : "") << "edge " << from << " - " << to << " - " << distance << endl;
             g.add_edge(from, to, distance, bidirectional);
         }
         file.close();
