@@ -4,7 +4,7 @@
 #include <string> 
 #include "graph.hpp"
 #include "file_reader.cpp"
-#define DEBUG 1
+#define DEBUG 0
 using namespace std;
 
 int dijkstra(vertex* from, vertex* to){
@@ -49,13 +49,12 @@ int dijkstra(vertex* from, vertex* to){
                 edge_destination->visited = true;
                 closest_neighbor = edge_destination;
                 queue.add(closest_neighbor);
+                if(DEBUG) queue.print();
                 
                 if(DEBUG) queue.print();
             }
         }
-        if(closest_neighbor == NULL){
-            if(DEBUG) cout << "No unvisited vertices for " << current->name << endl;
-        }
+        if(closest_neighbor == NULL) if(DEBUG) cout << "No unvisited vertices for " << current->name << endl;
     }
     if(to->shortest_path == INF){ cout << "Error. No path found. " << endl; return -1; }
 
@@ -75,7 +74,19 @@ int dijkstra(vertex* from, vertex* to){
     return to->shortest_path;
 }
 
+bool test(graph &g, string _from, string _to){
+    vertex* from = g.vertices[_from];
+    vertex* to = g.vertices[_to];
+    int d1 = dijkstra(from, to);
+    g.reset();
+    int d2 = dijkstra(to, from);        
+    g.reset();
+    if(d1 == d2) cout << endl << "TEST OK" << endl;
+    else cout << "TEST FAILED" << endl;
+    return d1 == d2;
+}
 int main(){
+
     {
         graph g;
         string template_name = "europe";
@@ -91,8 +102,25 @@ int main(){
         dijkstra(to, from);
     }
 
+    {
+        graph g;
+        string template_name = "europe";
+        load_vertices("graph_templates/" + template_name + "/vertices.dat", g);
+        load_edges("graph_templates/" + template_name + "/edges.dat", g, true);
 
-    // g.print();
+        // Simple test of whether the distance of the route is the same if path is reversed.
+        int fail_tests = 0;
+        int ok_tests = 0;
+
+        test(g, "Lisbon", "Tirana") ? ok_tests++ : fail_tests++;
+        test(g, "Lisbon", "Rome") ? ok_tests++ : fail_tests++;
+        test(g, "Lisbon", "Moscow") ? ok_tests++ : fail_tests++;
+        test(g, "Lisbon", "Kyiv") ? ok_tests++ : fail_tests++;
+        test(g, "Lisbon", "Riga") ? ok_tests++ : fail_tests++;
+
+        cout << "Successful tests " << ok_tests << "/" << fail_tests + ok_tests << endl;
+    }
+
 
     return 0;
 }

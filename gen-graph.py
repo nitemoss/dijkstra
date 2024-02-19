@@ -3,9 +3,9 @@ from geopy.distance import geodesic
 import itertools
 
 capitals = pd.read_csv("https://raw.githubusercontent.com/j-rossi-nl/teaching-data/main/2022_ITP/concap.csv", index_col = "CapitalName")
-capitals = capitals[capitals['ContinentName'] == "Europe"]
+capitals = capitals[(capitals['ContinentName'] == "Europe") | (capitals['ContinentName'] == "Asia")]
 
-MAX_DISTANCE = 800
+MAX_DISTANCE = 100000
 
 
 def cities_distance(city_from: str, city_to: str = "Amsterdam", cities: pd.DataFrame = capitals)->float:
@@ -27,13 +27,19 @@ def save_template(template_name = "europe"):
     open(vertices_filename, 'w').close()
     with open(vertices_filename, 'w') as f_vertices:
         for city in cities:
-            f_vertices.write(f"{city.replace(' ', '_')}\n")
+            try:
+                f_vertices.write(f"{city.replace(' ', '_')}\n")
+            except:
+                pass
             
     print("\tWriting vertices...")
     open(edges_filename, 'w').close()
     with open(edges_filename, 'w') as f_vertices:
         for pair in city_pairs:
-            distance = cities_distance(pair[0], pair[1])
+            try:
+                distance = cities_distance(pair[0], pair[1])
+            except:
+                continue
             if distance > MAX_DISTANCE:
                 continue
         
@@ -41,4 +47,4 @@ def save_template(template_name = "europe"):
             f_vertices.write(f"{pair[0].replace(' ', '_')} {pair[1].replace(' ', '_')} {distance}\n")
             
 
-save_template(template_name = "europe")
+save_template(template_name = "eurasia")
