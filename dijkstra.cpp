@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include <string> 
+#include <algorithm>
 #include "graph.hpp"
 #include "file_reader.cpp"
 #define DEBUG 0
@@ -10,9 +11,9 @@ using namespace std;
 int dijkstra(vertex* from, vertex* to){
     cout << endl << endl << "Making direction from " << from->name << " to " << to->name << "..." << endl;
 
-    vertex* current = from;
+    vertex* current = NULL;
     vertex_queue queue;
-    queue.add(current);
+    queue.add(from);
 
     while(!queue.empty()){
         current = queue.get_closest();     
@@ -37,7 +38,7 @@ int dijkstra(vertex* from, vertex* to){
             
             if(DEBUG) cout << "\t"  << current->name  << " -> " << edge_destination->name  << " : "  << edge_distance  << " "  << (edge_destination->visited ? " (visited)" : "")  << endl;
             
-            // 1. Update estimates
+            // 1. Update neighbors' estimates
             if((current->shortest_path + edge_distance < edge_destination->shortest_path)){
                 edge_destination->shortest_path = current->shortest_path + edge_distance;
                 edge_destination->previous = current;
@@ -49,8 +50,6 @@ int dijkstra(vertex* from, vertex* to){
                 edge_destination->visited = true;
                 closest_neighbor = edge_destination;
                 queue.add(closest_neighbor);
-                if(DEBUG) queue.print();
-                
                 if(DEBUG) queue.print();
             }
         }
@@ -67,23 +66,27 @@ int dijkstra(vertex* from, vertex* to){
     }
 
     cout << "Final route: " << endl;
-    for(auto &it: path){
-        cout << " -> " << it;
-    }
+    for(auto &it: path) cout << " -> " << it;
     cout << " (" << to->shortest_path << " km)" << endl;
     return to->shortest_path;
 }
 
-bool test(graph &g, string _from, string _to){
+bool reverse_path_test(graph &g, string _from, string _to){
     vertex* from = g.vertices[_from];
     vertex* to = g.vertices[_to];
     int d1 = dijkstra(from, to);
     g.reset();
     int d2 = dijkstra(to, from);        
     g.reset();
-    if(d1 == d2) cout << endl << "TEST OK" << endl;
-    else cout << "TEST FAILED" << endl;
-    return d1 == d2;
+    if(d1 == d2 and d1 != -1 and d2 != -1){
+        cout << endl << "TEST OK" << endl;
+        return true;
+    }
+    else {
+        cout << "TEST FAILED" << endl;
+        return false;
+    }
+    
 }
 int main(){
 
@@ -112,11 +115,11 @@ int main(){
         int fail_tests = 0;
         int ok_tests = 0;
 
-        test(g, "Lisbon", "Tirana") ? ok_tests++ : fail_tests++;
-        test(g, "Lisbon", "Rome") ? ok_tests++ : fail_tests++;
-        test(g, "Lisbon", "Moscow") ? ok_tests++ : fail_tests++;
-        test(g, "Lisbon", "Kyiv") ? ok_tests++ : fail_tests++;
-        test(g, "Lisbon", "Riga") ? ok_tests++ : fail_tests++;
+        reverse_path_test(g, "Lisbon", "Tirana") ? ok_tests++ : fail_tests++;
+        reverse_path_test(g, "Lisbon", "Rome") ? ok_tests++ : fail_tests++;
+        reverse_path_test(g, "Lisbon", "Moscow") ? ok_tests++ : fail_tests++;
+        reverse_path_test(g, "Lisbon", "Kyiv") ? ok_tests++ : fail_tests++;
+        reverse_path_test(g, "Lisbon", "Riga") ? ok_tests++ : fail_tests++;
 
         cout << "Successful tests " << ok_tests << "/" << fail_tests + ok_tests << endl;
     }
