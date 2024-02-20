@@ -27,8 +27,8 @@ Riga
 Jurmala
 Jelgava
 ```
-#### `./graph_templates/sometemplate/vertices.dat`
-Each line contains start vertex, destination and distance:
+#### `./graph_templates/sometemplate/edges.dat`
+Each line contains start vertex, destination vertex and a distance:
 ```
 Riga Jurmala 30
 Jurmala Jelgava 50
@@ -36,9 +36,9 @@ Riga Jelgava 90
 ```
 
 
-## Generating new graph templates using `gen_graph.py`
+## Generating new graph templates using `gen-graph.py`
 There is an option to generate new graph templates based on the real locations of the cities.
-- Install python, install python libraries `pandas` and `geopy`.
+- Install Python, install Python libraries `pandas` and `geopy`.
 - Change the code if you need to select some continent
 ```python
 capitals = capitals[capitals['ContinentName'] == "Europe"]
@@ -47,4 +47,4 @@ capitals = capitals[capitals['ContinentName'] == "Europe"]
 ```python
 save_template(template_name = "europe")
 ```
-- Run `python3 gen_graph.py`.
+- Run `python3 gen-graph.py`.
