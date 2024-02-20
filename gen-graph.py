@@ -14,7 +14,7 @@ def cities_distance(city_from: str, city_to: str = "Amsterdam", cities: pd.DataF
     destination = capitals.loc[city_to, lat_long].agg(tuple)
     return int(geodesic(origin,destination).km)
 
-def df_from_file(file = "lv.dat"):
+def df_from_file(file = "lv2.csv"):
     global capitals
     capitals = pd.read_csv(file)
     capitals.columns = ['CapitalName', "CapitalLatitude", "CapitalLongitude"]
@@ -53,5 +53,5 @@ def save_template(template_name = "europe"):
             f_vertices.write(f"{pair[0].replace(' ', '_')} {pair[1].replace(' ', '_')} {distance}\n")
             
 
-# df_from_file()
+df_from_file()
 save_template(template_name = TEMPLATE_NAME)
