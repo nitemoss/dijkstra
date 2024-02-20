@@ -5,7 +5,7 @@
 #include <algorithm>
 #include "graph.hpp"
 #include "file_reader.cpp"
-#define DEBUG 0
+#define DEBUG 1
 using namespace std;
 
 int dijkstra(vertex* from, vertex* to){
@@ -122,6 +122,19 @@ int main(){
         reverse_path_test(g, "Lisbon", "Riga") ? ok_tests++ : fail_tests++;
 
         cout << "Successful tests " << ok_tests << "/" << fail_tests + ok_tests << endl;
+    }
+    {
+
+        graph g;
+        string template_name = "latvia";
+        load_vertices("graph_templates/" + template_name + "/vertices.dat", g);
+        load_edges("graph_templates/" + template_name + "/edges.dat", g, true);
+
+        vertex* from = g.vertices["Liepaja"];
+        vertex* to = g.vertices["Riga"];
+        
+        // Dijkstra algorithm can be performed only once on the same graph.
+        dijkstra(from, to);
     }
 
 

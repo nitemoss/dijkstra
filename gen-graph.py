@@ -5,16 +5,22 @@ import itertools
 capitals = pd.read_csv("https://raw.githubusercontent.com/j-rossi-nl/teaching-data/main/2022_ITP/concap.csv", index_col = "CapitalName")
 capitals = capitals[(capitals['ContinentName'] == "Europe") | (capitals['ContinentName'] == "Asia")]
 
-MAX_DISTANCE = 100000
-
+MAX_DISTANCE = 100
+TEMPLATE_NAME = "latvia"
 
 def cities_distance(city_from: str, city_to: str = "Amsterdam", cities: pd.DataFrame = capitals)->float:
     lat_long = ["CapitalLatitude", "CapitalLongitude"]
-
     origin = capitals.loc[city_from, lat_long].agg(tuple)
     destination = capitals.loc[city_to, lat_long].agg(tuple)
-
     return int(geodesic(origin,destination).km)
+
+def df_from_file(file = "lv.dat"):
+    global capitals
+    capitals = pd.read_csv(file)
+    capitals.columns = ['CapitalName', "CapitalLatitude", "CapitalLongitude"]
+    capitals = capitals.set_index("CapitalName")
+    print(capitals)
+
 
 def save_template(template_name = "europe"):
     city_pairs = list(itertools.combinations(capitals.index, 2))
@@ -47,4 +53,5 @@ def save_template(template_name = "europe"):
             f_vertices.write(f"{pair[0].replace(' ', '_')} {pair[1].replace(' ', '_')} {distance}\n")
             
 
-save_template(template_name = "eurasia")
+# df_from_file()
+save_template(template_name = TEMPLATE_NAME)
