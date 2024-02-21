@@ -9,6 +9,7 @@
 using namespace std;
 
 int dijkstra(vertex* from, vertex* to){
+    if(from == NULL || to == NULL) {cerr << "Error. Vertices not found." << endl; return -1;}
     cout << endl << endl << "Making direction from " << from->name << " to " << to->name << "..." << endl;
 
     vertex* current = NULL;
@@ -55,7 +56,7 @@ int dijkstra(vertex* from, vertex* to){
         }
         if(closest_neighbor == NULL) if(DEBUG) cout << "No unvisited vertices for " << current->name << endl;
     }
-    if(to->shortest_path == INF){ cout << "Error. No path found. " << endl; return -1; }
+    if(to->shortest_path == INF){ cerr << "Error. No path found. " << endl; return -1; }
 
     list<string> path = {};
     vertex* path_reversed_it = to;
@@ -88,55 +89,55 @@ bool reverse_path_test(graph &g, string _from, string _to){
     }
     
 }
-int main(){
+int main(int argc, char* argv[]){
+    if(argc == 1){
+        {
+            graph g;
+            string template_name = "europe";
+            load_vertices("graph_templates/" + template_name + "/vertices.dat", g);
+            load_edges("graph_templates/" + template_name + "/edges.dat", g, true);
 
-    {
+            vertex* from = g.vertices["Berlin"];
+            vertex* to = g.vertices["Lisbon"];
+            
+            // Dijkstra algorithm can be performed only once on the same graph.
+            dijkstra(from, to);
+            g.reset();
+            dijkstra(to, from);
+        }
+
+        {
+            graph g;
+            string template_name = "europe";
+            load_vertices("graph_templates/" + template_name + "/vertices.dat", g);
+            load_edges("graph_templates/" + template_name + "/edges.dat", g, true);
+
+            // Simple test of whether the distance of the route is the same if path is reversed.
+            int fail_tests = 0;
+            int ok_tests = 0;
+
+            reverse_path_test(g, "Lisbon", "Tirana") ? ok_tests++ : fail_tests++;
+            reverse_path_test(g, "Lisbon", "Rome") ? ok_tests++ : fail_tests++;
+            reverse_path_test(g, "Lisbon", "Moscow") ? ok_tests++ : fail_tests++;
+            reverse_path_test(g, "Lisbon", "Kyiv") ? ok_tests++ : fail_tests++;
+            reverse_path_test(g, "Lisbon", "Riga") ? ok_tests++ : fail_tests++;
+
+            cout << "Successful tests " << ok_tests << "/" << fail_tests + ok_tests << endl;
+        }
+    } else if(argc == 4){
+        string template_name = argv[1];
+        string _from = argv[2];
+        string _to = argv[3];
+
         graph g;
-        string template_name = "europe";
-        load_vertices("graph_templates/" + template_name + "/vertices.dat", g);
-        load_edges("graph_templates/" + template_name + "/edges.dat", g, true);
-
-        vertex* from = g.vertices["Berlin"];
-        vertex* to = g.vertices["Lisbon"];
+        load_graph_template(template_name, g, true);
         
-        // Dijkstra algorithm can be performed only once on the same graph.
-        dijkstra(from, to);
-        g.reset();
-        dijkstra(to, from);
-    }
-
-    {
-        graph g;
-        string template_name = "europe";
-        load_vertices("graph_templates/" + template_name + "/vertices.dat", g);
-        load_edges("graph_templates/" + template_name + "/edges.dat", g, true);
-
-        // Simple test of whether the distance of the route is the same if path is reversed.
-        int fail_tests = 0;
-        int ok_tests = 0;
-
-        reverse_path_test(g, "Lisbon", "Tirana") ? ok_tests++ : fail_tests++;
-        reverse_path_test(g, "Lisbon", "Rome") ? ok_tests++ : fail_tests++;
-        reverse_path_test(g, "Lisbon", "Moscow") ? ok_tests++ : fail_tests++;
-        reverse_path_test(g, "Lisbon", "Kyiv") ? ok_tests++ : fail_tests++;
-        reverse_path_test(g, "Lisbon", "Riga") ? ok_tests++ : fail_tests++;
-
-        cout << "Successful tests " << ok_tests << "/" << fail_tests + ok_tests << endl;
-    }
-    {
-
-        graph g;
-        string template_name = "latvia";
-        load_vertices("graph_templates/" + template_name + "/vertices.dat", g);
-        load_edges("graph_templates/" + template_name + "/edges.dat", g, true);
-
-        vertex* from = g.vertices["Liepaja"];
-        vertex* to = g.vertices["Riga"];
+        vertex* from = g.vertices[_from];
+        vertex* to = g.vertices[_to];
         
-        // Dijkstra algorithm can be performed only once on the same graph.
         dijkstra(from, to);
+    } else {
+        cout << "Wrong argument amount received. " << endl;
     }
-
-
     return 0;
 }

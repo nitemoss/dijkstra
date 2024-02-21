@@ -14,7 +14,7 @@ def cities_distance(city_from: str, city_to: str = "Amsterdam", cities: pd.DataF
     destination = capitals.loc[city_to, lat_long].agg(tuple)
     return int(geodesic(origin,destination).km)
 
-def df_from_file(file = "lv2.csv"):
+def df_from_file(file = "graph_templates/lv.csv"):
     global capitals
     capitals = pd.read_csv(file)
     capitals.columns = ['CapitalName', "CapitalLatitude", "CapitalLongitude"]

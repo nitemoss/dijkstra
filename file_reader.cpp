@@ -29,11 +29,13 @@ void load_edges(const string& filename, graph &g, bool bidirectional = false) {
         }
         file.close();
     } 
-    else cerr << "Unable to open file: " << filename << endl;
-    
-    
+    else cerr << "Unable to open file: " << filename << endl;    
 }
 
+void load_graph_template(string template_name, graph &g, bool bidirectional){
+    load_vertices("graph_templates/" + template_name + "/vertices.dat", g);
+    load_edges("graph_templates/" + template_name + "/edges.dat", g, bidirectional);
+}
 // int main(){
 //     graph g;
     

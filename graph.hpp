@@ -67,7 +67,7 @@ public:
     void print(){
         cout << "Queue: ";
         for(auto &it: vertices){
-            cout << " " << it->name;
+            cout << it->name << ", ";
         }
         cout << endl;
     }
