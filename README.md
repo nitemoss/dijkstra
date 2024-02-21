@@ -9,7 +9,70 @@ An algorithm that finds the shortest path between two vertices on the graph.
 - Install C++ extension in the codespace
 - Open the terminal and type `clang++ --std=c++11 dijkstra.cpp && ./a.out`
 
-## Graph Templates
+## Crete graph manually
+```c++
+int main(){
+  graph g;
+  g.add_vertex("Riga");
+  g.add_vertex("Olaine");
+  g.add_vertex("Kekava");
+  g.add_vertex("Jurmala");
+  g.add_vertex("Tukums");
+  g.add_vertex("Jelgava");
+  g.add_vertex("Ventspils");
+  
+  g.add_edge("Riga", "Jurmala", 10);
+  g.add_edge("Riga", "Olaine", 11);
+  g.add_edge("Riga", "Kekava", 13);
+  g.add_edge("Riga", "Jelgava", 80);
+  
+  g.add_edge("Jurmala", "Jelgava", 30);
+  g.add_edge("Jurmala", "Tukums", 20);
+  
+  g.add_edge("Jelgava", "Ventspils", 50);
+  g.add_edge("Tukums", "Ventspils", 10);
+  
+  g.add_edge("Olaine", "Ventspils", 10);
+  g.add_edge("Kekava", "Ventspils", 10);
+  
+  g.print();
+  
+  vertex* from = g.vertices["Riga"];
+  vertex* to = g.vertices["Ventspils"];
+  
+  dijkstra(from, to);
+
+  return 0;
+}
+```
+
+## Importing Graph Templates
+```c++
+int main(){
+  // Create Graph object.
+  graph g;
+
+  // Load Europe graph template.
+  string template_name = "europe";
+  load_vertices("graph_templates/" + template_name + "/vertices.dat", g);
+  load_edges("graph_templates/" + template_name + "/edges.dat", g, true);
+
+  // Define start and destination.
+  vertex* from = g.vertices["Berlin"];
+  vertex* to = g.vertices["Lisbon"];
+  
+  // Dijkstra algorithm can be performed only once on the same graph.
+  dijkstra(from, to);
+
+  // If needed to perform another path search, a graph reset is needed.
+  g.reset();
+
+  dijkstra(to, from);
+}
+```
+
+
+## Graph Templates structure
 
 The project has `./graph_templates/` directory. It contains graph templates, each template should have two files: `vertices.dat` and `edges.dat`.
 
@@ -38,7 +101,7 @@ Riga Jelgava 90
 
 ## Generating new graph templates using `gen-graph.py`
 There is an option to generate new graph templates based on the real locations of the cities.
-- Install Python, install Python libraries `pandas` and `geopy`.
+- Install Python, install Python libraries `pandas` and `geopy` (`pip3 install pandas geopy`).
 - Change the code if you need to select some continent
 ```python
 capitals = capitals[capitals['ContinentName'] == "Europe"]
