@@ -9,7 +9,12 @@ An algorithm that finds the shortest path between two vertices on the graph.
 - Install C++ extension in the codespace
 - Open the terminal and type `clang++ --std=c++11 dijkstra.cpp && ./a.out`
 
-## Crete graph manually
+## Command line arguments
+There is an option to specify starting and destination vertices. <br/>
+To select European graph template and make a path from `Riga` to `Paris`: `./a.out europe Riga Paris` <br/>
+To select Latvian graph template and make a path from `Riga` to `Jelgava`: `./a.out latvia Riga Jelgava` <br/>
+
+## Create graph manually
 ```c++
 int main(){
   graph g;
