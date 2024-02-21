@@ -26,9 +26,6 @@ struct vertex {
     vertex(string _name, bool visited) : name(_name) {}
     
     void print_edges();
-    bool operator<(const vertex &second){
-        return shortest_path < second.shortest_path;
-    }
 };
 
 void vertex::print_edges(){
@@ -60,15 +57,11 @@ public:
     void erase_closest(){
         vertex* minElement = get_closest();
         auto it = find(vertices.begin(), vertices.end(), minElement);
-        if (it != vertices.end()) {
-            vertices.erase(it);
-        }
+        if (it != vertices.end()) vertices.erase(it);
     }
     void print(){
         cout << "Queue: ";
-        for(auto &it: vertices){
-            cout << it->name << ", ";
-        }
+        for(auto &it: vertices) cout << it->name << ", ";
         cout << endl;
     }
     bool empty(){

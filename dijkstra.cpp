@@ -24,8 +24,8 @@ int dijkstra(vertex* from, vertex* to){
         // Vertex with a minimum distance of edge from a current vertex, which will be used as a current vertex in next iteration
         vertex* closest_neighbor = NULL;
 
-        if(current == to || current == NULL) break;
         if(current == from) current->shortest_path = 0;
+        if(current == to || current == NULL) break;
 
         int edges_amount = current->edges.size();
 
