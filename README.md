@@ -14,6 +14,9 @@ There is an option to specify starting and destination vertices. <br/>
 To select European graph template and make a path from `Riga` to `Paris`: `./a.out europe Riga Paris` <br/>
 To select Latvian graph template and make a path from `Riga` to `Jelgava`: `./a.out latvia Riga Jelgava` <br/>
 
+## Testing Scope
+The testing scope is only the `dijkstra(vertex* from, vertex* to)` function. <br/>
+
 ## Create graph manually
 ```c++
 int main(){
