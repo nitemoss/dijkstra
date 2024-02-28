@@ -36,12 +36,3 @@ void load_graph_template(string template_name, graph &g, bool bidirectional){
     load_vertices("graph_templates/" + template_name + "/vertices.dat", g);
     load_edges("graph_templates/" + template_name + "/edges.dat", g, bidirectional);
 }
-// int main(){
-//     graph g;
-    
-//     load_vertices("vertices.dat", g);
-//     load_edges("edges.dat", g);
-//     g.print();
-
-    
-// }
