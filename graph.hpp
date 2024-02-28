@@ -79,8 +79,6 @@ public:
 
     void add_vertex(const string&);
     void add_edge(const string& from, const string& to, double cost, bool bidirectional);
-    
-    void dijkstra(vertex* from, vertex* to);
 
     void print();
     void reset();
