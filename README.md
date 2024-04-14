@@ -1,13 +1,18 @@
 # Dijkstra's Algorithm
 An algorithm that finds the shortest path between two vertices on the graph.
 
+## How to run Google Tests
+If you do not have a ready development environment, perform all the necessary steps below to setup it, and type this command in the terminal: <br/>
+```clang++ unittest_dijkstra.cpp --std=c++14 -lgtest -lgtest_main -pthread -o unittests && ./unittests```
+
+
 ## How to run (using GitHub Codespace)
 
 - Go to GitHub codespaces: https://github.com/codespaces
 - Create new Codespace
 - Select this repository: `nitemoss/dijkstra`
 - Install C++ extension in the codespace
-- Open the terminal and type `clang++ --std=c++11 dijkstra.cpp && ./a.out`
+- Open the terminal and type `clang++ --std=c++14 dijkstra.cpp && ./a.out`
 
 ## Command line arguments
 There is an option to specify starting and destination vertices. <br/>
