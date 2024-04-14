@@ -1,6 +1,7 @@
 import pandas as pd
 from geopy.distance import geodesic
 import itertools
+import random
 
 capitals = pd.read_csv("https://raw.githubusercontent.com/j-rossi-nl/teaching-data/main/2022_ITP/concap.csv", index_col = "CapitalName")
 capitals = capitals[(capitals['ContinentName'] == "Europe") | (capitals['ContinentName'] == "Asia")]
@@ -53,5 +54,29 @@ def save_template(template_name = "europe"):
             f_vertices.write(f"{pair[0].replace(' ', '_')} {pair[1].replace(' ', '_')} {distance}\n")
             
 
-df_from_file()
-save_template(template_name = TEMPLATE_NAME)
+def nonGeographicGenerator(v = 500, e = 450):
+    template_name = "numerical"
+    vertices_filename = f"./graph_templates/{template_name}/vertices.dat"
+    edges_filename = f"./graph_templates/{template_name}/edges.dat"
+
+    vertices = [f"E{i}" for i in range(v)]
+
+    allEdges = list(itertools.combinations(vertices, 2))
+    
+    
+    uniquePairs = random.sample(allEdges, e)
+
+    with open(vertices_filename, "w+") as f:
+        for vertex in vertices:
+            f.write(f"{vertex}\n")
+
+    with open(edges_filename, "w+") as f:
+        for pair in uniquePairs:
+
+            f.write(f"{pair[0]} {pair[1]} {random.randint(1, 10000)}\n")
+
+
+# df_from_file()
+# save_template(template_name = TEMPLATE_NAME)
+
+nonGeographicGenerator()

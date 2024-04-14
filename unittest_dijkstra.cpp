@@ -9,12 +9,12 @@ int dijkstra_wrapper(graph g, string _from, string _to){
     return res;
 }
 
-void setup_graph(graph &g){
-    load_vertices("graph_templates/europe/vertices.dat", g);
-    load_edges("graph_templates/europe/edges.dat", g, true);
+void setup_graph(graph &g, string test_set = "europe"){
+    load_vertices("graph_templates/" + test_set + "/vertices.dat", g);
+    load_edges("graph_templates/" + test_set + "/edges.dat", g, true);
 }
 
-TEST(NonExistingNode, nullptrTest) {
+TEST(NonExistingNodeSuite, nullptrTest) {
     graph g; 
     setup_graph(g);
 
@@ -24,7 +24,7 @@ TEST(NonExistingNode, nullptrTest) {
     g.reset();
 }
 
-TEST(NonExistingNode, connectivity_Test){
+TEST(NonExistingNodeSuite, fullConnectivityTest){
     ASSERT_EQ(
         dijkstra(
             new vertex("NewVertex"),
@@ -33,7 +33,7 @@ TEST(NonExistingNode, connectivity_Test){
     );
 }
 
-TEST(NonExistingNode, partialConnectivityTest){
+TEST(NonExistingNodeSuite, partialConnectivityTest){
     graph g; 
     setup_graph(g);
 
@@ -43,19 +43,50 @@ TEST(NonExistingNode, partialConnectivityTest){
             new vertex("NewVertex2")
         ), -1
     );
+
+    g.reset();
+
+    ASSERT_EQ(
+        dijkstra(
+            new vertex("NewVertex2"),
+            g.vertices["Berlin"]
+        ), -1
+    );
 }
 
 
-TEST(NodeTest, nodeSwapTests) {
+TEST(NodeSwapSuite, nodeSwapTests) {
     graph g;
+    setup_graph(g);
 
-    load_vertices("graph_templates/europe/vertices.dat", g);
-    load_edges("graph_templates/europe/edges.dat", g, true);
+    ASSERT_EQ(
+        dijkstra(new vertex("Berlin"), new vertex("Lisbon")),
+        dijkstra(new vertex("Lisbon"), new vertex("Berlin"))
+    );
 
-    ASSERT_EQ(dijkstra_wrapper(g, "Berlin", "Lisbon"), 2432);
-    ASSERT_EQ(dijkstra_wrapper(g, "Lisbon", "Berlin"), 2432);
+    ASSERT_EQ(
+        dijkstra(new vertex("Moscow"), new vertex("Copenhagen")),
+        dijkstra(new vertex("Copenhagen"), new vertex("Moscow"))
+    );
+
+    ASSERT_EQ(
+        dijkstra(new vertex("Tallinn"), new vertex("Vilnius")),
+        dijkstra(new vertex("Vilnius"), new vertex("Tallinn"))
+    );
+
+    ASSERT_EQ(
+        dijkstra(new vertex("Riga"), new vertex("Oslo")),
+        dijkstra(new vertex("Oslo"), new vertex("Riga"))
+    );
+}
+
+TEST(EqualEndpointsSuite, equalEndpointsTest) {
+    graph g;
+    setup_graph(g, "numerical_E500_V450");
+
+    ASSERT_EQ(dijkstra(g.vertices["E1"], g.vertices["E381"]), 68851);
     
-    
+
 }
 
 

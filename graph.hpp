@@ -116,7 +116,6 @@ void graph::print(){
 }
 
 void graph::reset(){
-    cout << "Resetting" << endl;
     for (vertex_map::iterator it = vertices.begin(); it != vertices.end(); it++){
         if(it->second == NULL) continue;
         it->second->shortest_path = INF;
