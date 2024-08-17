@@ -5,7 +5,7 @@
 #include <algorithm>
 #include "graph.hpp"
 #include "file_reader.cpp"
-#define DEBUG 1
+#define DEBUG 0
 using namespace std;
 
 int dijkstra(vertex* from, vertex* to){

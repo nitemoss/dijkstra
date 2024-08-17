@@ -1,18 +1,24 @@
 #include <gtest/gtest.h>
 #include "dijkstra.cpp"
 
-int dijkstra_wrapper(graph g, string _from, string _to){
-    vertex* from = g.vertices[_from];
-    vertex* to = g.vertices[_to];
-    int res = dijkstra(from, to);
-    g.reset();
-    return res;
-}
 
 void setup_graph(graph &g, string test_set = "europe"){
     load_vertices("graph_templates/" + test_set + "/vertices.dat", g);
     load_edges("graph_templates/" + test_set + "/edges.dat", g, true);
 }
+
+
+TEST(BasicTestsSuite, subproblemsTest) {
+    graph g;
+    setup_graph(g, "latvia");
+
+    ASSERT_EQ(
+        dijkstra(g.vertices["Riga"], g.vertices["Jurmala"]),
+        dijkstra(g.vertices["Riga"], g.vertices["Babite"])
+        + dijkstra(g.vertices["Babite"], g.vertices["Jurmala"]) 
+        );
+}
+
 
 TEST(NonExistingNodeSuite, nullptrTest) {
     graph g; 
@@ -80,15 +86,44 @@ TEST(NodeSwapSuite, nodeSwapTests) {
     );
 }
 
-TEST(EqualEndpointsSuite, equalEndpointsTest) {
+TEST(LargeSizeSuite, largeSizeTest) {
     graph g;
-    setup_graph(g, "numerical_E500_V450");
+    setup_graph(g, "numerical_V500_E450");
 
     ASSERT_EQ(dijkstra(g.vertices["E1"], g.vertices["E381"]), 68851);
-    
-
 }
 
+
+TEST(NegativeWeightSuite, negativeWeightTest) {
+    graph g;
+    g.add_vertex("1");
+    g.add_vertex("2");
+    g.add_vertex("3");
+    g.add_vertex("4");
+    g.add_vertex("5");
+    g.add_edge("1", "2", -1);
+    g.add_edge("2", "3", -1);
+    g.add_edge("2", "5", -1); 
+
+    ASSERT_EQ(dijkstra(g.vertices["1"], g.vertices["5"]), -2);
+}
+
+TEST(LoopSuite, loopTest) {
+    graph g;
+    g.add_vertex("1");
+    g.add_vertex("2");
+    g.add_vertex("3");
+    g.add_vertex("4");
+    g.add_vertex("5");
+    g.add_vertex("6");
+    g.add_edge("1", "2", 1);
+    g.add_edge("2", "3", 1);
+    g.add_edge("3", "1", 1);
+    g.add_edge("2", "5", 1);
+    g.add_edge("5", "6", 1);
+
+    ASSERT_EQ(dijkstra(g.vertices["1"], g.vertices["6"]), 3);
+}
 
 
 int main(int argc, char **argv) {
